@@ -21,7 +21,7 @@ def main():
     prob = boardDecision()
     searchDecision(prob)
 
-goalState = [[1,2,3], [4,5,6], [7,8,0]]
+goalState = [['1','2','3'], ['4','5','6'], ['7','8','0']]
 #board = [[], [], []]
 
 
@@ -123,3 +123,83 @@ def boardDecision():
         else:        
             print("Error invalid input. Please try again")
     return board
+
+
+
+
+
+
+def searchDecision(board):
+    choice2 = input('Which search would you like to implement? Options: Uniform Cost Search, Misplaced Tile Search, Manhatten Distance Search (1,2,3) ')
+    
+    
+    while len(choice2) != 1 or '1' > choice2 > '3':#error checing
+        print('Try again')
+        choice2 = input('Which search would you like to implement? Options: Uniform Cost Search, Misplaced Tile Search, Manhatten Distance Search (1,2,3) ')
+    
+
+    if choice2 == '1':
+        print('Uniform Cost Search chosen')
+        UniformCostSearch(board, goalState, choice2)
+        
+    elif choice2 == '2':
+        print('Misplaced Tile Search chosen')
+        MisTileSearch(board, goalState)
+        
+
+    elif choice2 == '3':
+        print('Manhatten Distance Search chosen')
+        ManhattenDistSearch(board, goalState)
+       
+    
+
+
+#Breadth First Search - A* g(n) + h(n) where h(n) = 0
+def UniformCostSearch(board,goalState, choice2):
+    lowest = 100
+    MisChild1= 0
+    MisChild2=0
+    MisChild3=0
+    MisChild4=0
+
+    lowestChild = 0
+    maxQSize = 0
+    NumNodesExpanded = 0
+    queue = []
+    start = Node(0, board)
+    #print("hi3")
+    queue.append(start)
+    
+    done = []
+    
+    #for k in range(0,30):
+    while len(queue) > 0 :
+        i = queue.pop(0)
+        print("hi2")
+        printBoard(i.board)
+        if i.board == goalState:
+            printBoard(i.board)
+            print ("goal State!")
+            print ("solution depth was: " + str(i.depth))
+            print ("Number of Nodes expanded: " + str(NumNodesExpanded) )
+            print ("Max queue size was: " + str(maxQSize))
+            return
+       
+        getChilds(i)
+        #printBoard(i.board)
+       # print("hi")
+        #print(i.childU)
+        if done == []:
+            if i.childU != None:
+                print("hi4")
+                queue.append(i.childU)
+                NumNodesExpanded+=1
+            if i.childD != None:
+                queue.append(i.childD)
+                NumNodesExpanded+=1
+            if i.childR != None:
+                queue.append(i.childR)
+                NumNodesExpanded+=1
+            if i.childL != None:
+                queue.append(i.childL)
+                NumNodesExpanded+=1
