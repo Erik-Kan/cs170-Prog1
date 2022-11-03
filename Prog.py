@@ -26,9 +26,9 @@ goalState = [['1','2','3'], ['4','5','6'], ['7','8','0']]
 
 
 def printBoard(board):
-    for i in range(0,3):
+    for i in range(len(board)):
 
-        for j in range(0,3):
+        for j in range(len(board[i])):
             
             print(board[i][j], end = ' ')
 
@@ -36,9 +36,9 @@ def printBoard(board):
 
 #gets the different ways that the blank can move
 def getChilds(Node1):
-    for i in range(0,3):
+    for i in range(len(Node1.board)):
 
-        for j in range(0,3):
+        for j in range(len(Node1.board[i])):
            # print(i)
            # print(j)
             #print(Node.board[i][j])
@@ -144,7 +144,8 @@ def searchDecision(board):
         
     elif choice2 == '2':
         print('Misplaced Tile Search chosen')
-        MisTileSearch(board, goalState)
+        #MisTileSearch(board, goalState)
+        UniformCostSearch(board, goalState, choice2)
         
 
     elif choice2 == '3':
@@ -157,12 +158,9 @@ def searchDecision(board):
 #Breadth First Search - A* g(n) + h(n) where h(n) = 0
 def UniformCostSearch(board,goalState, choice2):
     lowest = 100
-    MisChild1= 0
-    MisChild2=0
-    MisChild3=0
-    MisChild4=0
+    
 
-    lowestChild = 0
+   
     maxQSize = 0
     NumNodesExpanded = 0
     queue = []
@@ -174,6 +172,11 @@ def UniformCostSearch(board,goalState, choice2):
     
     #for k in range(0,30):
     while len(queue) > 0 :
+        MisChild1= 100
+        MisChild2= 100
+        MisChild3= 100
+        MisChild4= 100
+        lowestChild = 0
         i = queue.pop(0)
         print("hi2")
         printBoard(i.board)
@@ -191,15 +194,190 @@ def UniformCostSearch(board,goalState, choice2):
         #print(i.childU)
         if done == []:
             if i.childU != None:
-                print("hi4")
+                if choice2 =="1":
+                    print("hi4")
+                    queue.append(i.childU)
+                    NumNodesExpanded+=1
+                elif choice2 == "2":
+                    print("mis3")
+                    MisChild1  = MisTileSearch(i.childU.board, goalState)
+                    if MisChild1 < lowest:
+                        lowest = MisChild1
+                        
+                        lowestChild = 1
+            if i.childD != None:
+                if choice2 =="1":
+                    queue.append(i.childD)
+                    NumNodesExpanded+=1
+                elif choice2 == "2":
+                    MisChild2 = MisTileSearch(i.childD.board, goalState)
+                    if MisChild2 < lowest:
+                        lowest = MisChild2
+                        lowestChild = 2
+            if i.childR != None:
+                print("mis4")
+                if choice2 =="1":
+                    queue.append(i.childR)
+                    NumNodesExpanded+=1
+                elif choice2 == "2":
+                    MisChild3= MisTileSearch(i.childR.board, goalState)
+                    if MisChild3 < lowest:
+                        print("mis5")
+                        lowest = MisChild3
+                        lowestChild = 3
+            if i.childL != None:
+                if choice2 =="1":
+                    queue.append(i.childL)
+                    NumNodesExpanded+=1
+                elif choice2 == "2":
+                    MisChild4 =  MisTileSearch(i.childL.board, goalState)
+                    if MisChild4 < lowest:
+                        lowest = MisChild4
+                        lowestChild = 4
+
+        else:
+            #print(done)
+            dupU = False
+            dupD = False
+            dupR = False
+            dupL = False
+            for j in done :
+                if i.childU != None and j.board == i.childU.board:
+                    dupU = True
+                if i.childD != None and j.board == i.childD.board:
+                    dupD = True
+                if i.childR != None and j.board == i.childR.board:
+                    dupR = True
+                if i.childL != None and j.board == i.childL.board:
+                    dupL = True
+            if i.childU != None and dupU == False :
+                print("hi6")
+                if choice2 =="1":
+                    print("hi7")
+                    queue.append(i.childU)
+                    NumNodesExpanded+=1
+                elif choice2 == "2":
+                    MisChild1  = MisTileSearch(i.childU.board, goalState)
+                    if MisChild1 < lowest:
+                        lowest = MisChild1
+                        lowestChild = 1
+                
+            if i.childD != None and dupD == False:
+                if choice2 =="1":
+                    queue.append(i.childD)
+                    NumNodesExpanded+=1
+                elif choice2 == "2":
+                    MisChild2 = MisTileSearch(i.childD.board, goalState)
+                    if MisChild2 < lowest:
+                        lowest = MisChild2
+                        lowestChild = 2
+
+            if i.childR != None and dupR == False:
+                if choice2 =="1":
+                    queue.append(i.childR)
+                    NumNodesExpanded+=1
+                elif choice2 == "2":
+                    MisChild3= MisTileSearch(i.childR.board, goalState)
+                    if MisChild3 < lowest:
+                        lowest = MisChild3
+                        lowestChild = 3
+                
+            if i.childL != None and dupL == False:
+                if choice2 =="1":
+                    queue.append(i.childL)
+                    NumNodesExpanded+=1
+                elif choice2 == "2":
+                    MisChild4 =  MisTileSearch(i.childL.board, goalState)
+                    if MisChild4 < lowest:
+                        lowest = MisChild4
+                        lowestChild = 4
+
+        if choice2 == "2":
+            print("mis7")
+            if lowestChild ==1:
                 queue.append(i.childU)
                 NumNodesExpanded+=1
-            if i.childD != None:
+                i.childU.cost = i.childU.depth + lowest
+                if MisChild2 == MisChild1 :
+                    i.childD.cost = i.childD.depth + lowest
+                    queue.append(i.childD)
+                    NumNodesExpanded+=1
+                if MisChild3 == MisChild1 :
+                    i.childR.cost = i.childR.depth + lowest
+                    queue.append(i.childR)
+                    NumNodesExpanded+=1
+                if MisChild4 == MisChild1 :
+                    i.childL.cost = i.childL.depth + lowest
+                    queue.append(i.childL)
+                    NumNodesExpanded+=1
+                print("The best state to expand with a g(n) =" + str(i.childU.depth) + "and h(n) =" + str(lowest))
+            elif lowestChild ==2:
+                i.childD.cost = i.childD.depth + lowest
                 queue.append(i.childD)
                 NumNodesExpanded+=1
-            if i.childR != None:
+                if MisChild3 == MisChild2 :
+                    i.childR.cost = i.childR.depth + lowest
+                    queue.append(i.childR)
+                    NumNodesExpanded+=1
+                if MisChild4 == MisChild2 :
+                    i.childL.cost = i.childL.depth + lowest
+                    queue.append(i.childL)
+                    NumNodesExpanded+=1
+            elif lowestChild ==3:
+                print("mis6")
+                i.childR.cost = i.childR.depth + lowest
                 queue.append(i.childR)
                 NumNodesExpanded+=1
-            if i.childL != None:
+                if MisChild4 == MisChild3 :
+                    i.childL.cost = i.childL.depth + lowest
+                    queue.append(i.childL)
+                    NumNodesExpanded+=1
+            elif lowestChild ==4:
+                i.childL.cost = i.childL.depth + lowest
                 queue.append(i.childL)
                 NumNodesExpanded+=1
+            
+                
+
+
+                
+
+        lowest = 100
+        done.append (i)
+        print (len(queue))
+        if maxQSize < len(queue):
+            maxQSize = len(queue)
+
+    #if board == goal:
+    #  return board
+        
+        #queue.append()
+
+
+
+
+
+def ManhattenDistSearch(board, goalState):
+    ManHatDist = 0
+    
+
+def MisTileSearch(board, goalState):
+    print('hi Mis')
+    
+    MisTile =0
+    for i in range (len(board)):
+        for j in range (len(board)):
+            if board [i][j] != '0' and board[i][j] != goalState[i][j] :
+            
+                MisTile+=1
+    #if board[2][2] != '0':
+       # MisTile -=1
+
+    print(MisTile)
+    return MisTile
+                
+
+
+    
+if __name__ == "__main__":
+    main()
