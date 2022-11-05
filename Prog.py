@@ -195,7 +195,7 @@ def UniformCostSearch(board,goalState, choice2):
         #print("hi2")
         printBoard(i.board)
         if i.board == goalState:#output once goal state is achieved
-            print("\n)")
+            print("\n")
             printBoard(i.board)
             print("Time elapsed : " + str(f'{(time.time()- startTime):.2f}'))#gets the time elapsed
             print ("goal State!")
