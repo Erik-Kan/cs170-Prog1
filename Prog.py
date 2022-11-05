@@ -171,6 +171,13 @@ def UniformCostSearch(board,goalState, choice2):
     start = Node(0, board)
     #print("hi3")
     queue.append(start)
+    if choice2 == "2":
+        start.heuristic = MisTileSearch(start.board, goalState)
+        start.cost = start.depth + start.heuristic
+        
+    elif choice2 == "3":
+        start.heuristic = ManhattenDistSearch(start.board,goalState)
+        start.cost = start.depth + start.heuristic
     
     done = []
     
@@ -195,6 +202,7 @@ def UniformCostSearch(board,goalState, choice2):
         #print("hi2")
         printBoard(i.board)
         if i.board == goalState:#output once goal state is achieved
+            
             print("\n")
             printBoard(i.board)
             print("Time elapsed : " + str(f'{(time.time()- startTime):.2f}'))#gets the time elapsed
@@ -242,8 +250,8 @@ def UniformCostSearch(board,goalState, choice2):
                     i.childR.cost = i.childR.depth 
                     queue.append(i.childR)
                     #NumNodesExpanded+=1
-                elif choice2 == "3":
-                    i.childR.heuristic  = ManhattenDistSearch(i.childR.board, goalState)
+                elif choice2 == "2":
+                    i.childR.heuristic  = MisTileSearch(i.childR.board, goalState)
                     i.childR.cost = i.childR.depth + i.childR.heuristic
                     queue.append(i.childR)
                 elif choice2 == "3":
@@ -300,7 +308,7 @@ def UniformCostSearch(board,goalState, choice2):
                 if choice2 =="1":
                     i.childD.cost = i.childD.depth
                     queue.append(i.childD)
-                    NumNodesExpanded+=1
+                    #NumNodesExpanded+=1
                 elif choice2 == "2":
                     i.childD.heuristic = MisTileSearch(i.childD.board, goalState)
                     i.childD.cost = i.childD.depth + i.childD.heuristic
